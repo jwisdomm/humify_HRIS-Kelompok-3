@@ -62,25 +62,17 @@
             <div class="grid grid-cols-3 gap-4 mb-6">
 
                 {{-- Annual Leave --}}
-                <div class="bg-white border border-slate-200 rounded-lg px-6 py-5">
-                    <p class="text-xs text-slate-400 mb-2">Annual leave &middot; remaining</p>
-                    <p class="text-3xl font-bold text-slate-800 mb-2">8 days</p>
-                    <p class="text-xs text-teal-600">2026 &middot; 12 opening / 4 used</p>
-                </div>
+                <x-card title="Annual leave · remaining" value="8 Days">
+                    2026 &middot; 12 opening / 4 used
+                </x-card>
 
                 {{-- Personal Leave --}}
-                <div class="bg-white border border-slate-200 rounded-lg px-6 py-5">
-                    <p class="text-xs text-slate-400 mb-2">Personal leave &middot; remaining</p>
-                    <p class="text-3xl font-bold text-slate-800 mb-2">2 days</p>
-                    <p class="text-xs text-teal-600">2026 &middot; 3 opening / 1 used</p>
-                </div>
+                <x-card title="Personal leave · remaining" value="2 Days">2026 &middot; 3 opening / 1 used</x-card>
 
-                {{-- Requests Awaiting --}}
-                <div class="bg-white border border-slate-200 rounded-lg px-6 py-5">
-                    <p class="text-xs text-slate-400 mb-2">Requests awaiting a decision</p>
-                    <p class="text-3xl font-bold text-slate-800 mb-2">1</p>
-                    <a href="#" class="text-xs text-teal-600 hover:underline">View Leave &amp; Requests &rarr;</a>
-                </div>
+             
+                <x-card title="Requests awaiting a decision" value="1">
+                    <a class="hover:underline" href="#">View Leave &amp; Requests &rarr;</a>
+                </x-card>
 
             </div>
 

@@ -7,4 +7,3 @@ enum ShiftCategory: string
     case Regular = 'regular';
     case Shifting = 'shifting';
 }
-

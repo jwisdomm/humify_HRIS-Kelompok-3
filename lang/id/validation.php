@@ -162,4 +162,3 @@ return [
         'rejection_reason' => 'alasan penolakan',
     ],
 ];
-

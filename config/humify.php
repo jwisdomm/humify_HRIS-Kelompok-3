@@ -78,4 +78,3 @@ return [
     // Pemetaan leave_type_id atau leave_type_name ke attendance status (default kosong)
     'leave_type_attendance_map' => [],
 ];
-

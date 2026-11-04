@@ -25,4 +25,3 @@ class ApiException extends Exception
         ], $this->statusCode);
     }
 }
-

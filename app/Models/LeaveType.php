@@ -47,4 +47,3 @@ class LeaveType extends Model
         return $this->hasMany(LeaveRequest::class, 'leave_type_id');
     }
 }
-

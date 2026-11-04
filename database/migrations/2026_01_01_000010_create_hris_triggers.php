@@ -10,6 +10,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         DB::unprepared("
             CREATE TRIGGER trg_validate_attendance_shift_insert
             BEFORE INSERT ON attendances
@@ -121,4 +125,3 @@ return new class extends Migration
         DB::unprepared('DROP TRIGGER IF EXISTS trg_apply_leave_balance;');
     }
 };
-

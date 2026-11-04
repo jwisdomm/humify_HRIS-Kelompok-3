@@ -268,4 +268,3 @@ class DemoSeeder extends Seeder
         }
     }
 }
-

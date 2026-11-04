@@ -73,7 +73,9 @@ return new class extends Migration
             $table->index(['review_status', 'attendance_date'], 'idx_attendances_pending_review');
         });
 
-        DB::statement('ALTER TABLE attendances ADD CONSTRAINT chk_attendance_checkout CHECK (check_out_time IS NULL OR check_in_time IS NULL OR check_out_time > check_in_time)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE attendances ADD CONSTRAINT chk_attendance_checkout CHECK (check_out_time IS NULL OR check_in_time IS NULL OR check_out_time > check_in_time)');
+        }
     }
 
     /**
@@ -84,4 +86,3 @@ return new class extends Migration
         Schema::dropIfExists('attendances');
     }
 };
-

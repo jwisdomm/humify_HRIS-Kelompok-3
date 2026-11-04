@@ -16,30 +16,77 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        $user = $request->user('api');
+        $user = $request->user('web') ?? $request->user('api') ?? $request->user();
 
         if (! $user) {
-            throw new ApiException('Belum login atau token tidak valid.', 'UNAUTHENTICATED', 401);
+            if ($request->expectsJson() || $request->is('api/*')) {
+                throw new ApiException('Belum login atau token tidak valid.', 'UNAUTHENTICATED', 401);
+            }
+
+            return redirect()->guest(route('login'))->with('error', 'Silakan login terlebih dahulu.');
         }
 
         // Muat ulang user dari database pada setiap request sesuai aturan 6.2
         $user = $user->fresh();
         if (! $user) {
-            throw new ApiException('Akun tidak ditemukan.', 'UNAUTHENTICATED', 401);
+            if ($request->expectsJson() || $request->is('api/*')) {
+                throw new ApiException('Akun tidak ditemukan.', 'UNAUTHENTICATED', 401);
+            }
+
+            auth()->logout();
+
+            return redirect()->route('login')->with('error', 'Akun tidak ditemukan.');
         }
 
         if (! $user->is_active) {
-            throw new ApiException('Akun dinonaktifkan.', 'ACCOUNT_INACTIVE', 403);
+            if ($request->expectsJson() || $request->is('api/*')) {
+                throw new ApiException('Akun dinonaktifkan.', 'ACCOUNT_INACTIVE', 403);
+            }
+
+            auth()->logout();
+
+            return redirect()->route('login')->with('error', 'Akun Anda dinonaktifkan.');
         }
 
-        if ($user->employee && in_array($user->employee->employee_status?->value ?? $user->employee->employee_status, ['nonaktif', 'resign'], true)) {
-            throw new ApiException('Karyawan nonaktif atau resign.', 'EMPLOYEE_INACTIVE', 403);
+        $employeeStatus = $user->employee?->employee_status?->value ?? $user->employee?->employee_status;
+        if ($user->employee && in_array($employeeStatus, ['nonaktif', 'resign', 'inactive', 'resigned'], true)) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                throw new ApiException('Karyawan nonaktif atau resign.', 'EMPLOYEE_INACTIVE', 403);
+            }
+
+            auth()->logout();
+
+            return redirect()->route('login')->with('error', 'Status karyawan nonaktif atau resign.');
         }
 
         $userRole = is_object($user->role) ? $user->role->value : (string) $user->role;
 
-        if (! empty($roles) && ! in_array($userRole, $roles, true)) {
-            throw new ApiException('Role tidak berhak.', 'FORBIDDEN', 403);
+        // Normalize roles comparison
+        $normalizedUserRole = match ($userRole) {
+            'employee', 'karyawan' => 'karyawan',
+            'hr_admin', 'admin_hr' => 'admin_hr',
+            default => $userRole,
+        };
+
+        $normalizedAllowedRoles = array_map(function ($r) {
+            return match ($r) {
+                'employee', 'karyawan' => 'karyawan',
+                'hr_admin', 'admin_hr' => 'admin_hr',
+                default => $r,
+            };
+        }, $roles);
+
+        // Super Admin has all HR privileges
+        $isAllowed = empty($roles)
+            || in_array($normalizedUserRole, $normalizedAllowedRoles, true)
+            || ($normalizedUserRole === 'super_admin' && in_array('admin_hr', $normalizedAllowedRoles, true));
+
+        if (! $isAllowed) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                throw new ApiException('Role tidak berhak.', 'FORBIDDEN', 403);
+            }
+
+            abort(403, 'Anda tidak memiliki hak akses untuk halaman ini.');
         }
 
         return $next($request);

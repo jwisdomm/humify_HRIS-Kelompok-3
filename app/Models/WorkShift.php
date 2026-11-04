@@ -42,4 +42,3 @@ class WorkShift extends Model
         return $this->hasMany(Attendance::class, 'shift_id');
     }
 }
-

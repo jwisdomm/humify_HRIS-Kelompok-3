@@ -64,7 +64,9 @@ return new class extends Migration
         });
 
         // Check constraint
-        DB::statement('ALTER TABLE employees ADD CONSTRAINT chk_employees_resign_date CHECK (resign_date IS NULL OR resign_date >= hire_date)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE employees ADD CONSTRAINT chk_employees_resign_date CHECK (resign_date IS NULL OR resign_date >= hire_date)');
+        }
     }
 
     /**
@@ -75,4 +77,3 @@ return new class extends Migration
         Schema::dropIfExists('employees');
     }
 };
-

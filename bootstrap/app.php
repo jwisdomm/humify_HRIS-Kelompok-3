@@ -34,57 +34,71 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Trigger QueryException (SQLSTATE 45000)
         $exceptions->render(function (QueryException $e, Request $request) {
-            if (($e->errorInfo[0] ?? null) === '45000') {
-                return response()->json([
-                    'message' => $e->errorInfo[2] ?? 'Shift tidak sesuai kategori karyawan',
-                    'code' => 'SHIFT_NOT_ALLOWED',
-                    'errors' => null,
-                ], 422);
+            if ($request->is('api/*') || $request->expectsJson()) {
+                if (($e->errorInfo[0] ?? null) === '45000') {
+                    return response()->json([
+                        'message' => $e->errorInfo[2] ?? 'Shift tidak sesuai kategori karyawan',
+                        'code' => 'SHIFT_NOT_ALLOWED',
+                        'errors' => null,
+                    ], 422);
+                }
             }
         });
 
         // Validation Exception
         $exceptions->render(function (ValidationException $e, Request $request) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'code' => 'VALIDATION_ERROR',
-                'errors' => $e->errors(),
-            ], 422);
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => 'VALIDATION_ERROR',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
         });
 
         // Authentication Exception
         $exceptions->render(function (AuthenticationException $e, Request $request) {
-            return response()->json([
-                'message' => 'Belum login atau token tidak valid.',
-                'code' => 'UNAUTHENTICATED',
-                'errors' => null,
-            ], 401);
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Belum login atau token tidak valid.',
+                    'code' => 'UNAUTHENTICATED',
+                    'errors' => null,
+                ], 401);
+            }
+
+            return redirect()->guest(route('login'))->with('error', 'Silakan login terlebih dahulu.');
         });
 
         // Authorization Exception
         $exceptions->render(function (AuthorizationException|AccessDeniedHttpException $e, Request $request) {
-            return response()->json([
-                'message' => 'Role tidak berhak.',
-                'code' => 'FORBIDDEN',
-                'errors' => null,
-            ], 403);
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Role tidak berhak.',
+                    'code' => 'FORBIDDEN',
+                    'errors' => null,
+                ], 403);
+            }
         });
 
         // Not Found Exception
         $exceptions->render(function (NotFoundHttpException|ModelNotFoundException $e, Request $request) {
-            return response()->json([
-                'message' => 'Data tidak ditemukan atau di luar cakupan.',
-                'code' => 'NOT_FOUND',
-                'errors' => null,
-            ], 404);
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Data tidak ditemukan atau di luar cakupan.',
+                    'code' => 'NOT_FOUND',
+                    'errors' => null,
+                ], 404);
+            }
         });
 
         // Rate limit Exception
         $exceptions->render(function (ThrottleRequestsException $e, Request $request) {
-            return response()->json([
-                'message' => 'Batas percobaan terlampaui.',
-                'code' => 'TOO_MANY_REQUESTS',
-                'errors' => null,
-            ], 429);
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Batas percobaan terlampaui.',
+                    'code' => 'TOO_MANY_REQUESTS',
+                    'errors' => null,
+                ], 429);
+            }
         });
     })->create();

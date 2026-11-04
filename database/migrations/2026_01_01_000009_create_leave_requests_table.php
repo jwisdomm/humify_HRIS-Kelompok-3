@@ -50,7 +50,9 @@ return new class extends Migration
             $table->index(['start_date', 'end_date'], 'idx_leave_requests_dates');
         });
 
-        DB::statement('ALTER TABLE leave_requests ADD CONSTRAINT chk_leave_request_dates CHECK (end_date >= start_date)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE leave_requests ADD CONSTRAINT chk_leave_request_dates CHECK (end_date >= start_date)');
+        }
     }
 
     /**
@@ -61,4 +63,3 @@ return new class extends Migration
         Schema::dropIfExists('leave_requests');
     }
 };
-

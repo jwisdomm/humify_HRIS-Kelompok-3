@@ -33,22 +33,22 @@ class ProfileController extends Controller
         }
 
         $validated = $request->validate([
-            'phone' => ['nullable', 'string', 'max:20'],
-            'email' => ['nullable', 'email', 'max:100'],
+            'phone' => ['nullable', 'numeric'],
+            'email' => ['nullable', 'email', 'max:150'],
             'address' => ['nullable', 'string', 'max:500'],
-            'emergency_contact_name' => ['nullable', 'string', 'max:100'],
-            'emergency_contact_phone' => ['nullable', 'string', 'max:20'],
-            'emergency_contact_relationship' => ['nullable', 'string', 'max:50'],
+            'birth_place' => ['nullable', 'string', 'max:100'],
+            'birth_date' => ['nullable', 'date'],
+            'gender' => ['nullable', 'in:L,P'],
         ]);
 
-        // Explicitly update only permitted editable personal fields
+        // Explicitly update only permitted editable personal fields that exist in the database
         $employee->update([
             'phone' => $validated['phone'] ?? null,
             'email' => $validated['email'] ?? null,
             'address' => $validated['address'] ?? null,
-            'emergency_contact_name' => $validated['emergency_contact_name'] ?? null,
-            'emergency_contact_phone' => $validated['emergency_contact_phone'] ?? null,
-            'emergency_contact_relationship' => $validated['emergency_contact_relationship'] ?? null,
+            'birth_place' => $validated['birth_place'] ?? null,
+            'birth_date' => $validated['birth_date'] ?? null,
+            'gender' => $validated['gender'] ?? null,
         ]);
 
         return redirect()->route('profile')->with('success', 'Data personal berhasil diperbarui.');

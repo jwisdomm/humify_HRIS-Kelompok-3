@@ -63,8 +63,6 @@
                             <th class="px-6 py-3.5">Paid / Unpaid</th>
                             <th class="px-6 py-3.5">Max Days/Year</th>
                             <th class="px-6 py-3.5">Attachment Required</th>
-                            <th class="px-6 py-3.5">Tracks Balance</th>
-                            <th class="px-6 py-3.5">Status</th>
                             <th class="px-6 py-3.5 text-right">Action</th>
                         </tr>
                     </thead>
@@ -85,14 +83,6 @@
                                 <td class="px-6 py-3.5 text-slate-600">
                                     {{ $lt->requires_attachment ? 'Yes (Dokumen Wajib)' : 'No' }}
                                 </td>
-                                <td class="px-6 py-3.5 text-slate-600">
-                                    {{ $lt->tracks_balance ? 'Yes' : 'No' }}
-                                </td>
-                                <td class="px-6 py-3.5">
-                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium border {{ $lt->is_active ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-500 border-slate-200' }}">
-                                        {{ $lt->is_active ? 'Active' : 'Inactive' }}
-                                    </span>
-                                </td>
                                 <td class="px-6 py-3.5 text-right">
                                     <button
                                         type="button"
@@ -102,8 +92,6 @@
                                             'is_paid' => (bool) $lt->is_paid,
                                             'max_days_per_year' => $lt->max_days_per_year,
                                             'requires_attachment' => (bool) $lt->requires_attachment,
-                                            'tracks_balance' => (bool) $lt->tracks_balance,
-                                            'is_active' => (bool) $lt->is_active,
                                             'update_url' => route('hr.leave-types.update', $lt->id)
                                         ]) }})"
                                         class="px-2.5 py-1 bg-slate-100 hover:bg-teal-50 hover:text-teal-700 rounded text-xs font-semibold cursor-pointer"
@@ -114,7 +102,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-10 text-center text-xs text-slate-400">
+                                <td colspan="5" class="px-6 py-10 text-center text-xs text-slate-400">
                                     Belum ada jenis cuti/izin yang dikonfigurasi.
                                 </td>
                             </tr>
@@ -269,16 +257,6 @@
                         <input type="checkbox" name="requires_attachment" value="1" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-slate-300">
                         <span class="text-xs text-slate-700">Requires Supporting Document (Surat Keterangan/Dokumen Wajib)</span>
                     </label>
-
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="tracks_balance" value="1" checked class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-slate-300">
-                        <span class="text-xs text-slate-700">Tracks Annual Balance Quota</span>
-                    </label>
-
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-slate-300">
-                        <span class="text-xs text-slate-700">Status Aktif</span>
-                    </label>
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
@@ -319,16 +297,6 @@
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="edit_lt_attach" name="requires_attachment" value="1" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-slate-300">
                         <span class="text-xs text-slate-700">Requires Supporting Document</span>
-                    </label>
-
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="edit_lt_track" name="tracks_balance" value="1" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-slate-300">
-                        <span class="text-xs text-slate-700">Tracks Annual Balance Quota</span>
-                    </label>
-
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="edit_lt_active" name="is_active" value="1" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-slate-300">
-                        <span class="text-xs text-slate-700">Status Aktif</span>
                     </label>
                 </div>
 
@@ -400,8 +368,6 @@
             document.getElementById('edit_lt_max').value = data.max_days_per_year || '';
             document.getElementById('edit_lt_paid').checked = data.is_paid;
             document.getElementById('edit_lt_attach').checked = data.requires_attachment;
-            document.getElementById('edit_lt_track').checked = data.tracks_balance;
-            document.getElementById('edit_lt_active').checked = data.is_active;
             document.getElementById('editTypeModal').classList.remove('hidden');
         }
 

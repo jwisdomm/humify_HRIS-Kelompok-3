@@ -65,13 +65,13 @@
                     </div>
 
                     <div>
-                        <label for="phone" class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+                        <label for="phone" class="block text-xs font-semibold text-slate-700 mb-1">Phone Number (Numbers Only)</label>
                         <input
-                            type="text"
+                            type="number"
                             id="phone"
                             name="phone"
                             value="{{ old('phone') }}"
-                            placeholder="08123456789"
+                            placeholder="081234567890"
                             class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
                         >
                     </div>
@@ -79,9 +79,44 @@
                     <div>
                         <label for="gender" class="block text-xs font-semibold text-slate-700 mb-1">Gender *</label>
                         <select name="gender" id="gender" required class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600">
-                            <option value="male" {{ old('gender') === 'male' ? 'selected' : '' }}>Male (Laki-laki)</option>
-                            <option value="female" {{ old('gender') === 'female' ? 'selected' : '' }}>Female (Perempuan)</option>
+                            <option value="L" {{ old('gender') === 'L' || old('gender') === 'male' ? 'selected' : '' }}>Male (Laki-laki)</option>
+                            <option value="P" {{ old('gender') === 'P' || old('gender') === 'female' ? 'selected' : '' }}>Female (Perempuan)</option>
                         </select>
+                    </div>
+
+                    <div>
+                        <label for="birth_place" class="block text-xs font-semibold text-slate-700 mb-1">Birth Place</label>
+                        <input
+                            type="text"
+                            id="birth_place"
+                            name="birth_place"
+                            value="{{ old('birth_place') }}"
+                            placeholder="e.g. Jakarta"
+                            class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="birth_date" class="block text-xs font-semibold text-slate-700 mb-1">Birth Date</label>
+                        <input
+                            type="date"
+                            id="birth_date"
+                            name="birth_date"
+                            value="{{ old('birth_date') }}"
+                            class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
+                        >
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label for="address" class="block text-xs font-semibold text-slate-700 mb-1">Residential Address</label>
+                        <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            value="{{ old('address') }}"
+                            placeholder="e.g. Jl. Sudirman No. 1"
+                            class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
+                        >
                     </div>
                 </div>
             </div>

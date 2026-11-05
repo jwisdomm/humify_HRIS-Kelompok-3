@@ -211,7 +211,6 @@ class HrEmployeeController extends Controller
         $employee->update([
             'face_reference_photo_url' => $photoPath,
             'face_registered_at' => now(),
-            'face_registered_by' => $user->id,
         ]);
 
         return redirect()->route('hr.employees.show', ['id' => $employee->id, 'tab' => 'face'])->with('success', "Foto acuan wajah {$employee->full_name} berhasil diperbarui.");

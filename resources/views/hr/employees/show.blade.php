@@ -91,19 +91,19 @@
                 </div>
             </div>
 
-            <h4 class="text-xs font-bold text-slate-800 border-t border-slate-100 pt-5 mt-6 mb-3">Emergency Contact</h4>
+            <h4 class="text-xs font-bold text-slate-800 border-t border-slate-100 pt-5 mt-6 mb-3">Employment Summary</h4>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs bg-slate-50 p-3.5 rounded-lg border border-slate-200">
                 <div>
-                    <span class="text-slate-400 block text-[10px]">Contact Person</span>
-                    <span class="font-semibold text-slate-800">{{ $employee->emergency_contact_name ?? '-' }}</span>
+                    <span class="text-slate-400 block text-[10px]">Employment Type</span>
+                    <span class="font-semibold text-slate-800 capitalize">{{ $employee->employment_type?->value ?? (string) $employee->employment_type }}</span>
                 </div>
                 <div>
-                    <span class="text-slate-400 block text-[10px]">Phone Number</span>
-                    <span class="font-medium text-slate-800">{{ $employee->emergency_contact_phone ?? '-' }}</span>
+                    <span class="text-slate-400 block text-[10px]">Hire Date</span>
+                    <span class="font-medium text-slate-800">{{ $employee->hire_date ? \Carbon\Carbon::parse($employee->hire_date)->format('d M Y') : '-' }}</span>
                 </div>
                 <div>
-                    <span class="text-slate-400 block text-[10px]">Relationship</span>
-                    <span class="font-medium text-slate-800">{{ $employee->emergency_contact_relationship ?? '-' }}</span>
+                    <span class="text-slate-400 block text-[10px]">Work Category</span>
+                    <span class="font-medium text-slate-800">{{ $employee->is_shift_worker ? 'Shifting Worker' : 'Regular Worker' }}</span>
                 </div>
             </div>
         </div>

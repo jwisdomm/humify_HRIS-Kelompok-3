@@ -36,6 +36,21 @@ test('employee can login and access permitted personal pages', function () {
         ->get('/leave-requests')
         ->assertStatus(200)
         ->assertSee('My leave & requests');
+
+    $updateResponse = $this->actingAs($user)
+        ->put('/profile', [
+            'phone' => '081234567890',
+            'email' => 'alex.updated@humify.test',
+            'address' => 'Jl. Baru No. 10',
+            'birth_place' => 'Jakarta',
+            'birth_date' => '1994-11-18',
+            'gender' => 'L',
+        ]);
+
+    $updateResponse->assertRedirect('/profile');
+    $updateResponse->assertSessionHas('success');
+    expect($user->employee->fresh()->phone)->toBe('081234567890')
+        ->and($user->employee->fresh()->email)->toBe('alex.updated@humify.test');
 });
 
 test('employee is forbidden from manager, hr, and admin pages', function () {

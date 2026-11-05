@@ -108,12 +108,10 @@ class HrSettingsController extends Controller
     public function storeLeaveType(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:100', 'unique:leave_types,name'],
+            'name' => ['required', 'string', 'max:50', 'unique:leave_types,name'],
             'is_paid' => ['boolean'],
             'max_days_per_year' => ['nullable', 'integer', 'min:1'],
             'requires_attachment' => ['boolean'],
-            'tracks_balance' => ['boolean'],
-            'is_active' => ['boolean'],
         ]);
 
         LeaveType::create([
@@ -121,8 +119,6 @@ class HrSettingsController extends Controller
             'is_paid' => $request->boolean('is_paid', true),
             'max_days_per_year' => $validated['max_days_per_year'] ?? null,
             'requires_attachment' => $request->boolean('requires_attachment'),
-            'tracks_balance' => $request->boolean('tracks_balance', true),
-            'is_active' => $request->boolean('is_active', true),
         ]);
 
         return redirect()->route('hr.leave-settings', ['tab' => 'types'])->with('success', "Jenis cuti {$validated['name']} berhasil ditambahkan.");
@@ -133,12 +129,10 @@ class HrSettingsController extends Controller
         $leaveType = LeaveType::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:100', 'unique:leave_types,name,'.$id],
+            'name' => ['required', 'string', 'max:50', 'unique:leave_types,name,'.$id],
             'is_paid' => ['boolean'],
             'max_days_per_year' => ['nullable', 'integer', 'min:1'],
             'requires_attachment' => ['boolean'],
-            'tracks_balance' => ['boolean'],
-            'is_active' => ['boolean'],
         ]);
 
         $leaveType->update([
@@ -146,8 +140,6 @@ class HrSettingsController extends Controller
             'is_paid' => $request->boolean('is_paid'),
             'max_days_per_year' => $validated['max_days_per_year'] ?? null,
             'requires_attachment' => $request->boolean('requires_attachment'),
-            'tracks_balance' => $request->boolean('tracks_balance'),
-            'is_active' => $request->boolean('is_active'),
         ]);
 
         return redirect()->route('hr.leave-settings', ['tab' => 'types'])->with('success', "Jenis cuti {$leaveType->name} berhasil diperbarui.");

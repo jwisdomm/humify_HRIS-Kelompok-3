@@ -18,7 +18,7 @@
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
                 <div>
                     <h2 class="text-sm font-semibold text-slate-900">Personal Information</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">You may update your own contact details and emergency contact.</p>
+                    <p class="text-xs text-slate-400 mt-0.5">You may update your own contact details and personal demographics.</p>
                 </div>
                 <span class="px-2 py-0.5 text-[10px] font-semibold bg-teal-50 text-teal-700 border border-teal-200 rounded-full">
                     Editable by Employee
@@ -31,27 +31,65 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="personal_email" class="block text-xs font-semibold text-slate-700 mb-1.5">Personal Email</label>
+                        <label for="email" class="block text-xs font-semibold text-slate-700 mb-1.5">Personal / Work Email</label>
                         <input
                             type="email"
-                            id="personal_email"
-                            name="personal_email"
-                            value="{{ old('personal_email', $employee?->personal_email ?? '') }}"
-                            placeholder="e.g. personal@gmail.com"
+                            id="email"
+                            name="email"
+                            value="{{ old('email', $employee?->email ?? '') }}"
+                            placeholder="e.g. employee@humify.test"
                             class="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 transition"
                         >
                     </div>
 
                     <div>
-                        <label for="phone" class="block text-xs font-semibold text-slate-700 mb-1.5">Phone Number</label>
+                        <label for="phone" class="block text-xs font-semibold text-slate-700 mb-1.5">Phone Number (Numbers Only)</label>
                         <input
-                            type="text"
+                            type="number"
                             id="phone"
                             name="phone"
-                            value="{{ old('phone', $employee?->phone ?? '') }}"
-                            placeholder="e.g. +62 812 3456 7890"
+                            value="{{ old('phone', preg_replace('/[^0-9]/', '', $employee?->phone ?? '')) }}"
+                            placeholder="e.g. 081234567890"
                             class="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 transition"
                         >
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-100">
+                    <h3 class="text-xs font-semibold text-slate-800 mb-3">Personal &amp; Demographics</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label for="birth_place" class="block text-[11px] font-medium text-slate-600 mb-1">Birth Place</label>
+                            <input
+                                type="text"
+                                id="birth_place"
+                                name="birth_place"
+                                value="{{ old('birth_place', $employee?->birth_place ?? '') }}"
+                                placeholder="e.g. Jakarta, Bandung"
+                                class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
+                            >
+                        </div>
+                        <div>
+                            <label for="birth_date" class="block text-[11px] font-medium text-slate-600 mb-1">Birth Date</label>
+                            <input
+                                type="date"
+                                id="birth_date"
+                                name="birth_date"
+                                value="{{ old('birth_date', $employee?->birth_date ? \Carbon\Carbon::parse($employee->birth_date)->format('Y-m-d') : '') }}"
+                                class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
+                            >
+                        </div>
+                        <div>
+                            <label for="gender" class="block text-[11px] font-medium text-slate-600 mb-1">Gender</label>
+                            <select
+                                id="gender"
+                                name="gender"
+                                class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
+                            >
+                                <option value="L" {{ in_array(old('gender', is_object($employee?->gender) ? $employee->gender->value : $employee?->gender), ['L', 'male', 'Laki-laki']) ? 'selected' : '' }}>Male (Laki-laki)</option>
+                                <option value="P" {{ in_array(old('gender', is_object($employee?->gender) ? $employee->gender->value : $employee?->gender), ['P', 'female', 'Perempuan']) ? 'selected' : '' }}>Female (Perempuan)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -64,45 +102,6 @@
                         placeholder="Enter your current residential address"
                         class="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 transition"
                     >{{ old('address', $employee?->address ?? '') }}</textarea>
-                </div>
-
-                <div class="pt-4 border-t border-slate-100">
-                    <h3 class="text-xs font-semibold text-slate-800 mb-3">Emergency Contact Details</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                            <label for="emergency_contact_name" class="block text-[11px] font-medium text-slate-600 mb-1">Contact Name</label>
-                            <input
-                                type="text"
-                                id="emergency_contact_name"
-                                name="emergency_contact_name"
-                                value="{{ old('emergency_contact_name', $employee?->emergency_contact_name ?? '') }}"
-                                placeholder="Full Name"
-                                class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
-                            >
-                        </div>
-                        <div>
-                            <label for="emergency_contact_phone" class="block text-[11px] font-medium text-slate-600 mb-1">Phone Number</label>
-                            <input
-                                type="text"
-                                id="emergency_contact_phone"
-                                name="emergency_contact_phone"
-                                value="{{ old('emergency_contact_phone', $employee?->emergency_contact_phone ?? '') }}"
-                                placeholder="Phone"
-                                class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
-                            >
-                        </div>
-                        <div>
-                            <label for="emergency_contact_relationship" class="block text-[11px] font-medium text-slate-600 mb-1">Relationship</label>
-                            <input
-                                type="text"
-                                id="emergency_contact_relationship"
-                                name="emergency_contact_relationship"
-                                value="{{ old('emergency_contact_relationship', $employee?->emergency_contact_relationship ?? '') }}"
-                                placeholder="e.g. Spouse, Parent"
-                                class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600"
-                            >
-                        </div>
-                    </div>
                 </div>
 
                 <div class="pt-4 flex items-center justify-end gap-3">
